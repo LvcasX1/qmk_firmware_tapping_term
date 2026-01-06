@@ -6,11 +6,20 @@ jobs:
     runs-on: ubuntu-latest
     container: qmkfm/qmk_cli
     steps:
+      - name: Disable git safe directory
+        run: git config --global --add safe.directory '*'
+
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup QMK
+        run: qmk setup -y
+
       - name: Build firmware
         run: qmk compile -kb crkbd -km default
+
       - uses: actions/upload-artifact@v4
         with:
           name: firmware

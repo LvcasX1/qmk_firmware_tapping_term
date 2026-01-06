@@ -1,0 +1,19 @@
+name: Build QMK firmware
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: qmkfm/qmk_cli
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Build firmware
+        run: qmk compile -kb crkbd -km default
+      - uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: |
+            *.hex
+            *.uf2
